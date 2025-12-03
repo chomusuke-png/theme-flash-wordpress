@@ -1,0 +1,26 @@
+.halal-repeater-list {
+    margin-top: 10px;
+    padding: 0;
+}
+
+.halal-repeater-item {
+    background: #fff;
+    padding: 10px;
+    margin-bottom: 8px;
+    border: 1px solid #ddd;
+    display: grid;
+    gap: 6px;
+    align-items: center;
+}
+
+.halal-repeater-item input,
+.halal-repeater-item select {
+    width: 100%;
+}
+
+.drag-handle {
+    cursor: move;
+    font-size: 20px;
+    padding: 5px;
+    user-select: none;
+}

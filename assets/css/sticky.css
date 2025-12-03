@@ -1,0 +1,29 @@
+/* STICKY HEADER version desktop only */
+@media (min-width: 769px) {
+    .main-header.sticky {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 99999;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    /* Ajuste para admin bar de WordPress */
+    .admin-bar .main-header.sticky {
+        top: 32px;
+    }
+
+    @media screen and (max-width: 782px) {
+        .admin-bar .main-header.sticky {
+            top: 46px;
+        }
+    }
+}
+
+/* En móvil no es sticky */
+@media (max-width: 768px) {
+    .main-header {
+        position: relative !important;
+        box-shadow: none !important;
+    }
+}

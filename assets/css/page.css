@@ -1,0 +1,143 @@
+/* CONTENEDOR GENERAL */
+.page-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+    display: flex;
+    gap: 40px;
+}
+
+.page-container .sidebar {
+    width: 350px;
+    flex-shrink: 0;
+}
+
+/* CONTENIDO PRINCIPAL */
+.page-content {
+    flex: 1;
+}
+
+/* ARTÍCULO */
+.page-article {
+    background: #ffffff;
+    padding: 20px 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* TÍTULO */
+.page-title {
+    font-size: 32px;
+    margin-bottom: 20px;
+    color: #222;
+    border-left: 6px solid #d40000;
+    padding-left: 12px;
+}
+
+/* IMAGEN DESTACADA */
+.page-featured {
+    margin-bottom: 25px;
+}
+
+.page-featured img {
+    width: 100%;
+    border-radius: 8px;
+}
+
+/* TEXTO */
+.page-text {
+    font-size: 18px;
+    line-height: 1.7;
+    color: #343434;
+}
+
+.page-text p {
+    margin-bottom: 20px;
+}
+
+/* MENSAJE VACÍO */
+.page-empty {
+    padding: 20px;
+    background: #f8f8f8;
+    color: #444;
+    border-radius: 6px;
+    text-align: center;
+    border-left: 5px solid #d40000;
+}
+
+/* ============================
+   RESPONSIVE PARA TABLETS
+   ============================ */
+@media (max-width: 992px) {
+
+    .page-container {
+        gap: 20px;
+        padding: 0 15px;
+    }
+
+    .page-title {
+        font-size: 28px;
+    }
+
+    .page-text {
+        font-size: 17px;
+    }
+}
+
+/* ============================
+   RESPONSIVE PARA MÓVILES
+   ============================ */
+@media (max-width: 768px) {
+
+    .page-container {
+        flex-direction: column;
+        max-width: 100%;
+        padding: 0 15px;
+    }
+
+    /* Sidebar abajo */
+    .sidebar {
+        order: 2;
+        width: 100%;
+    }
+
+    /* Contenido arriba */
+    .page-content {
+        order: 1;
+        width: 100%;
+    }
+
+    .page-title {
+        font-size: 24px;
+        padding-left: 10px;
+        border-left-width: 5px;
+    }
+
+    .page-article {
+        padding: 15px 18px;
+    }
+
+    .page-text {
+        font-size: 16px;
+        line-height: 1.6;
+    }
+}
+
+/* ============================
+   RESPONSIVE PARA TELÉFONOS PEQUEÑOS
+   ============================ */
+@media (max-width: 480px) {
+
+    .page-title {
+        font-size: 22px;
+    }
+
+    .page-text {
+        font-size: 15px;
+    }
+
+    .page-article {
+        padding: 12px 15px;
+    }
+}

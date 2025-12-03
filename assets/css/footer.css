@@ -1,0 +1,130 @@
+.footer {
+    background: #122d86;
+    color: white;
+    padding: 50px 20px 30px;
+    margin-top: 80px;
+    border-top: 4px solid #d40000;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: auto;
+    text-align: center;
+}
+
+.footer-links {
+    margin-bottom: 35px;
+}
+
+.footer-links h3 {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    font-weight: 700;
+    color: white;
+}
+
+.footer-links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.footer-links ul li {
+    margin: 0;
+}
+
+.footer-links a {
+    color: #cfd4ea;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 15px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.footer-links a:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+.footer-links a i {
+    font-size: 1.1rem;
+}
+
+.footer-copy {
+    margin-top: 30px;
+    padding-top: 25px;
+    font-size: 0.9rem;
+    opacity: 0.8;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+@media (max-width: 768px) {
+    .footer-links ul {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .footer-links a {
+        width: 100%;
+        max-width: 300px;
+        justify-content: center;
+    }
+}
+
+/* FOOTER WIDGETS */
+.footer-widgets {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    margin-bottom: 40px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.footer-widget {
+    color: #cfd4ea;
+}
+
+.footer-widget-title {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    font-weight: 700;
+    color: white;
+}
+
+.footer-widget ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-widget ul li {
+    margin-bottom: 10px;
+}
+
+.footer-widget a {
+    color: #cfd4ea;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.footer-widget a:hover {
+    color: white;
+}
+
+.footer-copy {
+    margin-top: 30px;
+    padding-top: 25px;
+    font-size: 0.9rem;
+    opacity: 0.8;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+}

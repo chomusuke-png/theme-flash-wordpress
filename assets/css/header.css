@@ -1,0 +1,107 @@
+/* HEADER SUPERIOR (franja roja) */
+.top-header {
+    background: #d40000;
+    color: white;
+    padding: 8px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    z-index: 1;
+}
+
+.top-header .social-icons a {
+    color: white;
+    margin-left: 10px;
+    font-size: 17px;
+    transition: opacity 0.2s;
+}
+
+.top-header .social-icons a:hover {
+    opacity: 0.7;
+}
+
+/* HEADER PRINCIPAL */
+.main-header {
+    background: white;
+    padding: 15px 20px;
+    border-bottom: 3px solid #d40000;
+    transition: all 0.25s ease;
+    position: relative;
+    z-index: 999;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.custom-logo {
+    width: 150px;
+    height: auto;
+    transition: width 0.25s ease;
+}
+
+.title-box h1 {
+    font-size: 22px;
+    color: #122d86;
+    margin-bottom: 3px;
+    font-weight: 700;
+}
+
+.title-box p {
+    font-size: 14px;
+    color: #333;
+}
+
+/* HAMBURGER BUTTON */
+.hamburger {
+    display: none;
+    font-size: 26px;
+    cursor: pointer;
+    color: #122d86;
+}
+
+/* MOBILE MENU */
+.mobile-menu {
+    display: none;
+    background: white;
+    border-top: 2px solid #d40000;
+    padding: 15px 20px;
+}
+
+.mobile-menu ul {
+    list-style: none;
+    padding: 0;
+}
+
+.mobile-menu ul li {
+    margin-bottom: 12px;
+}
+
+.mobile-menu ul li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .navbar {
+        display: none;
+    }
+
+    .hamburger {
+        display: block;
+    }
+
+    .custom-logo {
+        width: 120px;
+    }
+
+    .main-header {
+        padding: 10px 20px;
+    }
+}

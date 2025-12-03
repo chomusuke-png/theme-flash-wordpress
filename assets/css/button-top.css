@@ -1,0 +1,22 @@
+#btnTop {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background: #d40000;
+    color: white;
+    border: none;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    display: none;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#btnTop:hover {
+    opacity: 0.85;
+}
