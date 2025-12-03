@@ -1,8 +1,6 @@
 <?php
 
-function halalflash_styles()
-{
-
+function theme_enqueue_assets() {
     $css = get_template_directory_uri() . '/assets/css/';
 
     wp_enqueue_style('reset', $css . 'reset.css');
@@ -21,28 +19,18 @@ function halalflash_styles()
     wp_enqueue_style('responsive', $css . 'responsive.css');
     wp_enqueue_style('page', $css . 'page.css');
 
-
-    // style.css (obligatorio para WordPress, info del tema)
     wp_enqueue_style('main', get_stylesheet_uri());
-}
-add_action('wp_enqueue_scripts', 'halalflash_styles');
 
-
-// ===============================
-//   SCRIPTS DEL TEMA
-// ===============================
-function halalflash_scripts()
-{
+    // Scripts
     wp_enqueue_script(
-        "halalflash-js",
+        "theme-js",
         get_theme_file_uri("/script.js"),
         array("jquery"),
         "1.0",
         true
     );
 }
-add_action("wp_enqueue_scripts", "halalflash_scripts");
-
+add_action('wp_enqueue_scripts', 'theme_enqueue_assets');
 
 // ===============================
 //   Custom logo y menús
@@ -51,29 +39,23 @@ add_theme_support("custom-logo");
 add_theme_support("menus");
 add_theme_support('title-tag');
 
-
 register_nav_menus([
     "main_menu" => "Menú Principal"
 ]);
 
-function halal_customize_register($wp_customize)
-{
+function theme_customize_register($wp_customize) {
     if (class_exists('WP_Customize_Control')) {
 
-        class Halal_Repeater_Control extends WP_Customize_Control
-        {
-            public $type = 'halal_repeater';
+        class Custom_Repeater_Control extends WP_Customize_Control {
+            public $type = 'custom_repeater';
 
-            public function enqueue()
-            {
+            public function enqueue() {
                 wp_enqueue_script('jquery-ui-sortable');
-                wp_enqueue_script('halal-repeater', get_template_directory_uri() . '/repeater.js', ['jquery', 'jquery-ui-sortable'], false, true);
-                wp_enqueue_style('halal-repeater-css', get_template_directory_uri() . '/repeater.css');
+                wp_enqueue_script('custom-repeater-js', get_template_directory_uri() . '/repeater.js', ['jquery', 'jquery-ui-sortable'], false, true);
+                wp_enqueue_style('custom-repeater-css', get_template_directory_uri() . '/repeater.css');
             }
 
-            public function render_content()
-            {
-
+            public function render_content() {
                 $value = $this->value();
                 $value = $value ? json_decode($value, true) : [];
 
@@ -88,22 +70,19 @@ function halal_customize_register($wp_customize)
                     'fab fa-youtube' => 'YouTube',
                 ];
                 ?>
-
                 <label>
                     <span class="customize-control-title"><?php echo esc_html($this->label); ?></span>
                 </label>
+                
+                <div class="custom-repeater-wrapper">
+                    <button type="button" class="button add-item">Añadir elemento</button>
 
-                <div class="halal-repeater-wrapper">
-                    <button type="button" class="button add-social">Añadir red social</button>
-
-                    <ul class="halal-repeater-list">
+                    <ul class="custom-repeater-list">
                         <?php if (!empty($value)): ?>
                             <?php foreach ($value as $item): ?>
-                                <li class="halal-repeater-item">
-
-                                    <input type="text" class="title-field" placeholder="Título del sitio"
-                                        value="<?php echo esc_attr(isset($item['title']) ? $item['title'] : ''); ?>">
-
+                                <li class="custom-repeater-item">
+                                    <input type="text" class="title-field" placeholder="Título" value="<?php echo esc_attr(isset($item['title']) ? $item['title'] : ''); ?>">
+                                    
                                     <select class="icon-select">
                                         <option value="">Elegir icono…</option>
                                         <?php foreach ($icons as $class => $label): ?>
@@ -113,80 +92,120 @@ function halal_customize_register($wp_customize)
                                         <?php endforeach; ?>
                                     </select>
 
-                                    <input type="text" class="icon-field" placeholder="o escribe icono (fa-solid fa-user)"
-                                        value="<?php echo esc_attr($item['icon']); ?>">
-
+                                    <input type="text" class="icon-field" placeholder="Icono (ej: fa-solid fa-user)" value="<?php echo esc_attr($item['icon']); ?>">
                                     <input type="text" class="url-field" placeholder="URL" value="<?php echo esc_attr($item['url']); ?>">
 
                                     <span class="drag-handle">☰</span>
-                                    <button type="button" class="button remove-social">Eliminar</button>
+                                    <button type="button" class="button remove-item">Eliminar</button>
                                 </li>
-
                             <?php endforeach; ?>
                         <?php endif; ?>
                     </ul>
 
-                    <input type="hidden" class="halal-repeater-hidden" <?php $this->link(); ?>
-                        value="<?php echo esc_attr($this->value()); ?>">
-
+                    <input type="hidden" class="custom-repeater-hidden" <?php $this->link(); ?> value="<?php echo esc_attr($this->value()); ?>">
                 </div>
-
                 <?php
             }
         }
     }
 
-    // Registrar la sección
-    $wp_customize->add_section('halal_social_section', [
-        'title' => __('Redes Sociales', 'halal-theme'),
+    // --- SECCIÓN: REDES SOCIALES ---
+    $wp_customize->add_section('social_links_section', [
+        'title' => __('Redes Sociales', 'theme-domain'),
         'priority' => 30,
     ]);
 
-    // Setting
-    $wp_customize->add_setting('halal_social_repeater', [
+    $wp_customize->add_setting('social_links_data', [
         'default' => '',
-        'sanitize_callback' => function ($input) {
-            return wp_kses_post($input);
-        }
+        'sanitize_callback' => function ($input) { return wp_kses_post($input); }
     ]);
 
-    // Control
-    $wp_customize->add_control(new Halal_Repeater_Control($wp_customize, 'halal_social_repeater', [
-        'label' => __('Redes sociales dinámicas', 'halal-theme'),
-        'section' => 'halal_social_section',
+    $wp_customize->add_control(new Custom_Repeater_Control($wp_customize, 'social_links_data', [
+        'label' => __('Redes sociales dinámicas', 'theme-domain'),
+        'section' => 'social_links_section',
     ]));
 
-    // =========================
-    //  SECCIÓN: Sitios Relacionados
-    // =========================
-    $wp_customize->add_section('halal_related_sites_section', [
-        'title' => __('Sitios Relacionados', 'halal-theme'),
+    // --- SECCIÓN: SITIOS RELACIONADOS ---
+    $wp_customize->add_section('related_sites_section', [
+        'title' => __('Sitios Relacionados', 'theme-domain'),
         'priority' => 31,
     ]);
 
-    $wp_customize->add_setting('halal_related_sites_repeater', [
+    $wp_customize->add_setting('related_sites_data', [
         'default' => '',
-        'sanitize_callback' => function ($input) {
-            return wp_kses_post($input);
-        }
+        'sanitize_callback' => function ($input) { return wp_kses_post($input); }
     ]);
 
-    $wp_customize->add_control(new Halal_Repeater_Control($wp_customize, 'halal_related_sites_repeater', [
-        'label' => __('Sitios relacionados del footer', 'halal-theme'),
-        'section' => 'halal_related_sites_section',
+    $wp_customize->add_control(new Custom_Repeater_Control($wp_customize, 'related_sites_data', [
+        'label' => __('Enlaces del footer', 'theme-domain'),
+        'section' => 'related_sites_section',
     ]));
 
 
+    // --- SECCIÓN: GRID DE NOTICIAS ---
+    $wp_customize->add_section('grid_news_section', [
+        'title' => __('Grid de Noticias', 'theme-domain'),
+        'priority' => 30,
+    ]);
+
+    $wp_customize->add_setting('grid_category_id', [
+        'default' => '',
+        'sanitize_callback' => 'absint',
+    ]);
+
+    $wp_customize->add_control(new WP_Customize_Category_Control(
+        $wp_customize,
+        'grid_category_control',
+        [
+            'label' => __('Categoría a mostrar', 'theme-domain'),
+            'section' => 'grid_news_section',
+            'settings' => 'grid_category_id',
+        ]
+    ));
+
+    // --- SECCIÓN: BLOG ---
+    $wp_customize->add_section('blog_settings_section', array(
+        'title' => __('Control del Blog', 'theme-domain'),
+        'priority' => 35,
+    ));
+
+    $wp_customize->add_setting('show_blog_list', array(
+        'default' => true,
+        'sanitize_callback' => 'wp_validate_boolean',
+        'transport' => 'refresh',
+    ));
+
+    $wp_customize->add_control('show_blog_list_control', array(
+        'label' => __('Mostrar listado del blog', 'theme-domain'),
+        'section' => 'blog_settings_section',
+        'settings' => 'show_blog_list',
+        'type' => 'checkbox',
+    ));
+
+    $wp_customize->add_setting('home_posts_per_page', array(
+        'default' => 10,
+        'sanitize_callback' => 'absint',
+        'transport' => 'refresh'
+    ));
+
+    $wp_customize->add_control('home_posts_per_page_control', array(
+        'label' => __('Artículos por página', 'theme-domain'),
+        'section' => 'blog_settings_section',
+        'settings' => 'home_posts_per_page',
+        'type' => 'number',
+        'input_attrs' => array('min' => 1, 'max' => 50, 'step' => 1)
+    ));
 
 }
-add_action('customize_register', 'halal_customize_register');
+add_action('customize_register', 'theme_customize_register');
 
-function halalflash_register_sidebars()
-{
+
+// 4. REGISTRO DE SIDEBARS
+// -----------------------------------------------------------------
+function theme_register_sidebars() {
     register_sidebar([
         'name' => 'Sidebar Principal',
         'id' => 'main_sidebar',
-        'description' => 'Widgets que aparecerán en el sidebar.',
         'before_widget' => '<div class="widget-item">',
         'after_widget' => '</div>',
         'before_title' => '<h3 class="widget-title">',
@@ -202,163 +221,67 @@ function halalflash_register_sidebars()
         'after_title' => '</h4>',
     ]);
 }
-add_action('widgets_init', 'halalflash_register_sidebars');
+add_action('widgets_init', 'theme_register_sidebars');
 
-// Agregar metabox para posts destacados
-function halalflash_destacado_metabox()
-{
-    add_meta_box(
-        'destacado_metabox',
-        'Post Destacado',
-        'halalflash_destacado_callback',
-        'post',
-        'side'
-    );
+
+// 5. METABOX DE POST DESTACADO
+// -----------------------------------------------------------------
+function theme_featured_post_metabox() {
+    add_meta_box('featured_metabox', 'Post Destacado', 'theme_featured_post_callback', 'post', 'side');
 }
-add_action('add_meta_boxes', 'halalflash_destacado_metabox');
+add_action('add_meta_boxes', 'theme_featured_post_metabox');
 
-function halalflash_destacado_callback($post)
-{
-    wp_nonce_field('halalflash_destacado', 'destacado_nonce');
-    $value = get_post_meta($post->ID, '_is_destacado', true);
+function theme_featured_post_callback($post) {
+    wp_nonce_field('theme_featured_action', 'featured_nonce'); // Nonce genérico
+    $value = get_post_meta($post->ID, '_is_featured', true); // Meta key genérica
     ?>
     <label>
-        <input type="checkbox" name="is_destacado" value="1" <?php checked($value, '1'); ?>>
+        <input type="checkbox" name="is_featured" value="1" <?php checked($value, '1'); ?>>
         Marcar como destacado
     </label>
     <?php
 }
 
-function halalflash_save_destacado($post_id)
-{
-    if (!isset($_POST['destacado_nonce']) || !wp_verify_nonce($_POST['destacado_nonce'], 'halalflash_destacado')) {
-        return;
-    }
-
-    if (isset($_POST['is_destacado'])) {
-        update_post_meta($post_id, '_is_destacado', '1');
+function theme_save_featured_post($post_id) {
+    if (!isset($_POST['featured_nonce']) || !wp_verify_nonce($_POST['featured_nonce'], 'theme_featured_action')) return;
+    
+    if (isset($_POST['is_featured'])) {
+        update_post_meta($post_id, '_is_featured', '1');
     } else {
-        delete_post_meta($post_id, '_is_destacado');
+        delete_post_meta($post_id, '_is_featured');
     }
 }
-add_action('save_post', 'halalflash_save_destacado');
+add_action('save_post', 'theme_save_featured_post');
 
-// ================================
-// CUSTOMIZER: Selección de categoría
-// ================================
-function halalflash_customizer($wp_customize)
-{
 
-    // Sección para la Grid
-    $wp_customize->add_section('grid_noticias_section', [
-        'title' => __('Grid de Noticias', 'halalflash'),
-        'priority' => 30,
-    ]);
-
-    // Ajuste para guardar la categoría
-    $wp_customize->add_setting('grid_categoria', [
-        'default' => '',
-        'sanitize_callback' => 'absint',
-    ]);
-
-    // Dropdown con las categorías existentes
-    $wp_customize->add_control(new WP_Customize_Category_Control(
-        $wp_customize,
-        'grid_categoria_control',
-        [
-            'label' => __('Categoría a mostrar', 'halalflash'),
-            'section' => 'grid_noticias_section',
-            'settings' => 'grid_categoria',
-        ]
-    ));
+// 6. MODIFICAR QUERY DEL HOME
+// -----------------------------------------------------------------
+function theme_modify_home_query($query) {
+    if (!is_admin() && $query->is_main_query() && (is_home() || is_front_page())) {
+        $cantidad = get_theme_mod('home_posts_per_page', 10);
+        $query->set('posts_per_page', absint($cantidad));
+    }
 }
-add_action('customize_register', 'halalflash_customizer');
+add_action('pre_get_posts', 'theme_modify_home_query');
 
 
-// =======================================
-// CONTROL PERSONALIZADO PARA MOSTRAR CATEGORÍAS
-// =======================================
+// 7. CONTROL DROPDOWN (HELPERS)
+// -----------------------------------------------------------------
 if (class_exists('WP_Customize_Control')) {
-    class WP_Customize_Category_Control extends WP_Customize_Control
-    {
+    class WP_Customize_Category_Control extends WP_Customize_Control {
         public $type = 'dropdown-categories';
-
-        public function render_content()
-        {
+        public function render_content() {
             $dropdown = wp_dropdown_categories([
-                'show_option_none' => __('— Selecciona una categoría —'),
+                'show_option_none' => __('— Selecciona —', 'theme-domain'),
                 'orderby' => 'name',
                 'hide_empty' => false,
                 'name' => '_customize-dropdown-categories-' . $this->id,
                 'selected' => $this->value(),
                 'echo' => false
             ]);
-
             $dropdown = str_replace('<select', '<select ' . $this->get_link(), $dropdown);
-
             echo '<label><span class="customize-control-title">' . esc_html($this->label) . '</span></label>';
             echo $dropdown;
         }
     }
 }
-
-// ===============================
-// OPCIÓN PARA MOSTRAR / OCULTAR LISTADO DE BLOG
-// ===============================
-function halalflash_blog_toggle($wp_customize)
-{
-
-    $wp_customize->add_section('halalflash_blog_section', array(
-        'title' => __('Control del Blog', 'halalflash'),
-        'priority' => 35,
-    ));
-
-    $wp_customize->add_setting('halalflash_show_blog', array(
-        'default' => true,
-        'sanitize_callback' => 'wp_validate_boolean',
-        'transport' => 'refresh',
-    ));
-
-    $wp_customize->add_control('halalflash_show_blog_control', array(
-        'label' => __('Mostrar listado del blog', 'halalflash'),
-        'section' => 'halalflash_blog_section',
-        'settings' => 'halalflash_show_blog',
-        'type' => 'checkbox',
-    ));
-
-    // ============================
-    //   CANTIDAD DE POSTS EN INDEX
-    // ============================
-    $wp_customize->add_setting('halalflash_posts_per_page', array(
-        'default' => 10,
-        'sanitize_callback' => 'absint',
-        'transport' => 'refresh'
-    ));
-
-    $wp_customize->add_control('halalflash_posts_per_page_control', array(
-        'label' => __('Cantidad de artículos por página', 'halalflash'),
-        'section' => 'halalflash_blog_section',
-        'settings' => 'halalflash_posts_per_page',
-        'type' => 'number',
-        'input_attrs' => array(
-            'min' => 1,
-            'max' => 50,
-            'step' => 1
-        )
-    ));
-
-}
-add_action('customize_register', 'halalflash_blog_toggle');
-
-// Aplicar la cantidad personalizada de posts por página
-function halalflash_modify_posts_per_page($query)
-{
-
-    // Solo modificar la query principal en el home/blog
-    if (!is_admin() && $query->is_main_query() && (is_home() || is_front_page())) {
-
-        $cantidad = get_theme_mod('halalflash_posts_per_page', 10);
-        $query->set('posts_per_page', absint($cantidad));
-    }
-}
-add_action('pre_get_posts', 'halalflash_modify_posts_per_page');

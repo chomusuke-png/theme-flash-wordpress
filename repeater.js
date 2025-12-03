@@ -3,7 +3,7 @@ jQuery(document).ready(function ($) {
     function updateField(wrapper) {
         let items = [];
 
-        wrapper.find('.halal-repeater-item').each(function () {
+        wrapper.find('.custom-repeater-item').each(function () {
             items.push({
                 title: $(this).find('.title-field').val(),
                 icon: $(this).find('.icon-field').val(),
@@ -12,14 +12,14 @@ jQuery(document).ready(function ($) {
 
         });
 
-        wrapper.find('.halal-repeater-hidden').val(JSON.stringify(items)).trigger('change');
+        wrapper.find('.custom-repeater-hidden').val(JSON.stringify(items)).trigger('change');
     }
 
-    $('.halal-repeater-wrapper').each(function () {
+    $('.custom-repeater-wrapper').each(function () {
         const wrapper = $(this);
 
         // Drag & Drop
-        wrapper.find('.halal-repeater-list').sortable({
+        wrapper.find('.custom-repeater-list').sortable({
             handle: '.drag-handle',
             update: function () {
                 updateField(wrapper);
@@ -28,8 +28,8 @@ jQuery(document).ready(function ($) {
 
         // Añadir
         wrapper.on('click', '.add-social', function () {
-            wrapper.find('.halal-repeater-list').append(`
-                <li class="halal-repeater-item">
+            wrapper.find('.custom-repeater-list').append(`
+                <li class=".custom-repeater-item">
                     <input type="text" class="title-field" placeholder="Título del sitio">
 
                     <select class="icon-select">
@@ -53,13 +53,13 @@ jQuery(document).ready(function ($) {
 
         // Eliminar
         wrapper.on('click', '.remove-social', function () {
-            $(this).closest('.halal-repeater-item').remove();
+            $(this).closest('.custom-repeater-item').remove();
             updateField(wrapper);
         });
 
         // Select sincroniza con input
         wrapper.on('change', '.icon-select', function () {
-            $(this).closest('.halal-repeater-item')
+            $(this).closest('.custom-repeater-item')
                    .find('.icon-field')
                    .val($(this).val());
             updateField(wrapper);

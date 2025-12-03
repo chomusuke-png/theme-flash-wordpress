@@ -1,9 +1,9 @@
-.halal-repeater-list {
+.custom-repeater-list {
     margin-top: 10px;
     padding: 0;
 }
 
-.halal-repeater-item {
+.custom-repeater-item {
     background: #fff;
     padding: 10px;
     margin-bottom: 8px;
@@ -13,8 +13,8 @@
     align-items: center;
 }
 
-.halal-repeater-item input,
-.halal-repeater-item select {
+.custom-repeater-item input,
+.custom-repeater-item select {
     width: 100%;
 }
 

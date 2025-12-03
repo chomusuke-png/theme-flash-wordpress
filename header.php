@@ -15,7 +15,7 @@
 
         <div class="social-icons">
             <?php
-            $items = json_decode(get_theme_mod('halal_social_repeater'), true);
+            $items = json_decode(get_theme_mod('social_links_data'), true);
 
             if (!empty($items)):
                 foreach ($items as $item):

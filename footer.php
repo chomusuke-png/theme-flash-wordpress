@@ -29,7 +29,7 @@
             <h3>Nuestros Sitios Relacionados</h3>
             <ul>
                 <?php
-                $related = json_decode(get_theme_mod('halal_related_sites_repeater'), true);
+                $related = json_decode(get_theme_mod('related_sites_data'), true);
 
                 if (!empty($related)):
                     foreach ($related as $site):

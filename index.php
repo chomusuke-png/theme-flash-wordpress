@@ -5,7 +5,7 @@
 <!-- NOTICIAS DESTACADAS (GRID) -->
 <section class="news-grid">
     <?php
-    $categoria_id = get_theme_mod('grid_categoria');
+    $categoria_id = get_theme_mod('grid_category_id');
 
     $args = [
         'posts_per_page' => 5,
@@ -60,7 +60,7 @@
 <div class="sidebar-container">
     <div class="main-content">
 
-        <?php if (get_theme_mod('halalflash_show_blog', true)): ?>
+        <?php if (get_theme_mod('show_blog_list', true)): ?>
 
             <!-- LISTADO DE TODAS LAS NOTICIAS -->
             <section class="news-list">
