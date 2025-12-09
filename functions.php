@@ -48,6 +48,8 @@ function theme_customize_register($wp_customize) {
 
         class Custom_Repeater_Control extends WP_Customize_Control {
             public $type = 'custom_repeater';
+            // Variable para almacenar los iconos permitidos
+            public $choices = [];
 
             public function enqueue() {
                 wp_enqueue_script('jquery-ui-sortable');
@@ -58,23 +60,15 @@ function theme_customize_register($wp_customize) {
             public function render_content() {
                 $value = $this->value();
                 $value = $value ? json_decode($value, true) : [];
-
-                $icons = [
-                    'fab fa-facebook-f' => 'Facebook',
-                    'fab fa-instagram' => 'Instagram',
-                    'fab fa-whatsapp' => 'WhatsApp',
-                    'fab fa-tiktok' => 'TikTok',
-                    'fas fa-envelope' => 'Email',
-                    'fas fa-location-dot' => 'Ubicación',
-                    'fab fa-x-twitter' => 'Twitter (X)',
-                    'fab fa-youtube' => 'YouTube',
-                ];
+                
+                // Codificamos los iconos en JSON para pasarlos al JS
+                $icons_json = htmlspecialchars(json_encode($this->choices), ENT_QUOTES, 'UTF-8');
                 ?>
                 <label>
                     <span class="customize-control-title"><?php echo esc_html($this->label); ?></span>
                 </label>
                 
-                <div class="custom-repeater-wrapper">
+                <div class="custom-repeater-wrapper" data-icons="<?php echo $icons_json; ?>">
                     <button type="button" class="button add-item">Añadir elemento</button>
 
                     <ul class="custom-repeater-list">
@@ -85,15 +79,15 @@ function theme_customize_register($wp_customize) {
                                     
                                     <select class="icon-select">
                                         <option value="">Elegir icono…</option>
-                                        <?php foreach ($icons as $class => $label): ?>
-                                            <option value="<?php echo esc_attr($class); ?>" <?php selected($item['icon'], $class); ?>>
+                                        <?php foreach ($this->choices as $class => $label): ?>
+                                            <option value="<?php echo esc_attr($class); ?>" <?php selected(isset($item['icon']) ? $item['icon'] : '', $class); ?>>
                                                 <?php echo esc_html($label); ?>
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
 
-                                    <input type="text" class="icon-field" placeholder="Icono (ej: fa-solid fa-user)" value="<?php echo esc_attr($item['icon']); ?>">
-                                    <input type="text" class="url-field" placeholder="URL" value="<?php echo esc_attr($item['url']); ?>">
+                                    <input type="text" class="icon-field" placeholder="Icono manual (ej: fa-solid fa-user)" value="<?php echo esc_attr(isset($item['icon']) ? $item['icon'] : ''); ?>">
+                                    <input type="text" class="url-field" placeholder="URL" value="<?php echo esc_attr(isset($item['url']) ? $item['url'] : ''); ?>">
 
                                     <span class="drag-handle">☰</span>
                                     <button type="button" class="button remove-item">Eliminar</button>
@@ -109,6 +103,31 @@ function theme_customize_register($wp_customize) {
         }
     }
 
+    // --- LISTAS DE ICONOS DEFINIDAS AQUÍ ---
+    
+    // 1. Iconos para Redes Sociales (TikTok, Insta, etc.)
+    $social_icons = [
+        'fab fa-facebook-f'   => 'Facebook',
+        'fab fa-instagram'    => 'Instagram',
+        'fab fa-tiktok'       => 'TikTok',
+        'fab fa-whatsapp'     => 'WhatsApp',
+        'fab fa-x-twitter'    => 'X (Twitter)',
+        'fab fa-youtube'      => 'YouTube',
+        'fab fa-linkedin-in'  => 'LinkedIn',
+        'fas fa-envelope'     => 'Email (Correo)',
+        'fas fa-phone'        => 'Teléfono',
+    ];
+
+    // 2. Iconos para Sitios Relacionados (Genéricos)
+    $related_icons = [
+        'fa-solid fa-newspaper' => 'Noticia / Diario',
+        'fa-solid fa-building'  => 'Empresa / Edificio',
+        'fa-solid fa-globe'     => 'Sitio Web / Globo',
+        'fa-solid fa-link'      => 'Enlace',
+        'fa-solid fa-check'     => 'Verificado',
+    ];
+
+
     // --- SECCIÓN: REDES SOCIALES ---
     $wp_customize->add_section('social_links_section', [
         'title' => __('Redes Sociales', 'theme-domain'),
@@ -120,10 +139,13 @@ function theme_customize_register($wp_customize) {
         'sanitize_callback' => function ($input) { return wp_kses_post($input); }
     ]);
 
+    // Pasamos $social_icons a 'choices'
     $wp_customize->add_control(new Custom_Repeater_Control($wp_customize, 'social_links_data', [
         'label' => __('Redes sociales dinámicas', 'theme-domain'),
         'section' => 'social_links_section',
+        'choices' => $social_icons, 
     ]));
+
 
     // --- SECCIÓN: SITIOS RELACIONADOS ---
     $wp_customize->add_section('related_sites_section', [
@@ -136,9 +158,11 @@ function theme_customize_register($wp_customize) {
         'sanitize_callback' => function ($input) { return wp_kses_post($input); }
     ]);
 
+    // Pasamos $related_icons a 'choices'
     $wp_customize->add_control(new Custom_Repeater_Control($wp_customize, 'related_sites_data', [
         'label' => __('Enlaces del footer', 'theme-domain'),
         'section' => 'related_sites_section',
+        'choices' => $related_icons,
     ]));
 
 
@@ -212,15 +236,13 @@ function theme_register_sidebars() {
         'after_title' => '</h3>',
     ]);
 
-    // ... (después de los otros register_sidebar)
-
     register_sidebar([
         'name'          => 'Barra Superior (Header)',
         'id'            => 'top_header_widget',
-        'description'   => 'Widget al centro de la barra roja superior (ideal para texto corto o anuncios).',
+        'description'   => 'Widget al centro de la barra roja superior.',
         'before_widget' => '<div id="%1$s" class="top-widget %2$s">',
         'after_widget'  => '</div>',
-        'before_title'  => '<span class="screen-reader-text">', // Ocultamos el título visualmente
+        'before_title'  => '<span class="screen-reader-text">',
         'after_title'   => '</span>',
     ]);
 
@@ -254,16 +276,15 @@ function theme_register_sidebars() {
 add_action('widgets_init', 'theme_register_sidebars');
 
 
-// 5. METABOX DE POST DESTACADO
-// -----------------------------------------------------------------
+// 5. METABOX Y OTROS
 function theme_featured_post_metabox() {
     add_meta_box('featured_metabox', 'Post Destacado', 'theme_featured_post_callback', 'post', 'side');
 }
 add_action('add_meta_boxes', 'theme_featured_post_metabox');
 
 function theme_featured_post_callback($post) {
-    wp_nonce_field('theme_featured_action', 'featured_nonce'); // Nonce genérico
-    $value = get_post_meta($post->ID, '_is_featured', true); // Meta key genérica
+    wp_nonce_field('theme_featured_action', 'featured_nonce');
+    $value = get_post_meta($post->ID, '_is_featured', true);
     ?>
     <label>
         <input type="checkbox" name="is_featured" value="1" <?php checked($value, '1'); ?>>
@@ -274,7 +295,6 @@ function theme_featured_post_callback($post) {
 
 function theme_save_featured_post($post_id) {
     if (!isset($_POST['featured_nonce']) || !wp_verify_nonce($_POST['featured_nonce'], 'theme_featured_action')) return;
-    
     if (isset($_POST['is_featured'])) {
         update_post_meta($post_id, '_is_featured', '1');
     } else {
@@ -283,9 +303,6 @@ function theme_save_featured_post($post_id) {
 }
 add_action('save_post', 'theme_save_featured_post');
 
-
-// 6. MODIFICAR QUERY DEL HOME
-// -----------------------------------------------------------------
 function theme_modify_home_query($query) {
     if (!is_admin() && $query->is_main_query() && (is_home() || is_front_page())) {
         $cantidad = get_theme_mod('home_posts_per_page', 10);
@@ -294,9 +311,6 @@ function theme_modify_home_query($query) {
 }
 add_action('pre_get_posts', 'theme_modify_home_query');
 
-
-// 7. CONTROL DROPDOWN (HELPERS)
-// -----------------------------------------------------------------
 if (class_exists('WP_Customize_Control')) {
     class WP_Customize_Category_Control extends WP_Customize_Control {
         public $type = 'dropdown-categories';
