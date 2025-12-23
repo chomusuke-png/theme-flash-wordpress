@@ -38,6 +38,7 @@ add_action('wp_enqueue_scripts', 'theme_enqueue_assets');
 add_theme_support("custom-logo");
 add_theme_support("menus");
 add_theme_support('title-tag');
+add_theme_support('post-thumbnails');
 
 register_nav_menus([
     "main_menu" => "Menú Principal"
