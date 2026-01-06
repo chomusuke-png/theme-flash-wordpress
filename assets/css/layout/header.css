@@ -218,14 +218,29 @@ a.glink img {
     }
     
     /* 2. MAIN HEADER */
-    .main-header { padding: 10px 15px; }
-    .custom-logo { width: 100px; }
-    .title-box h1 { font-size: 18px; }
-    .title-box p { display: none; }
-    
+    .main-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 15px;
+    }
+
+    /* Ocultamos el Nav de escritorio */
+    .navbar {
+        display: none;
+    }
+
+    /* Mostramos la hamburguesa */
     .hamburger {
-        font-size: 26px;
-        padding: 8px;
-        margin-left: 10px;
+        display: block;
+        /* No necesitamos margin-left: auto porque justify-content: space-between ya lo separa */
+    }
+
+    .custom-logo {
+        width: 120px;
+    }
+
+    .site-title {
+        font-size: 1.4rem;
     }
 }
