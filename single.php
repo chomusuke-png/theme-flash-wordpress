@@ -32,7 +32,7 @@ if ($related->have_posts()):
                     <?php if (has_post_thumbnail()): ?>
                         <img src="<?php the_post_thumbnail_url('large'); ?>">
                     <?php else: ?>
-                        <img src="https://via.placeholder.com/300x180">
+                        <img src="https://placehold.co/300x180">
                     <?php endif; ?>
 
                     <h3><?php the_title(); ?></h3>

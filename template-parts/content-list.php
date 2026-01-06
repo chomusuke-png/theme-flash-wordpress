@@ -3,7 +3,7 @@
         <?php if (has_post_thumbnail()): ?>
             <img src="<?php the_post_thumbnail_url('large'); ?>" alt="<?php the_title_attribute(); ?>">
         <?php else: ?>
-            <img src="https://via.placeholder.com/400x250/d40000/ffffff?text=<?php echo urlencode(get_the_title()); ?>"
+            <img src="https://placehold.co/400x250?text=<?php echo urlencode(get_the_title()); ?>"
                  alt="<?php the_title_attribute(); ?>">
         <?php endif; ?>
     </a>
